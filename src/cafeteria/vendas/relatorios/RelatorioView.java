@@ -126,8 +126,42 @@ public class RelatorioView extends JInternalFrame {
 	 * Executa as tarefas para exportar a exportação do relatório
 	 */
 	protected void onClickExportar() {
-		// TODO: Implementar
-		System.out.println("==> onClickExportar");
+		if (destinoSelecionado == null || !destinoSelecionado.canWrite()) {
+			System.err.println("Destino inválido ou não selecionado.");
+			return;
+		}
+
+		try {
+			// Obtendo o caminho absoluto do destino selecionado
+			String caminhoDestino = destinoSelecionado.getAbsolutePath();
+
+			// Verificando se o nome do relatório está preenchido
+			if (nomeRelatorio.getText().isEmpty()) {
+				System.err.println("Nome do relatório não está preenchido.");
+				return;
+			}
+
+			// Chamada ao exportador para gerar o relatório
+			exportador.exportar(new File(caminhoDestino));
+			System.out.println("Relatório exportado com sucesso para: " + caminhoDestino);
+
+			// Opcional: Mensagem de sucesso para o usuário
+			javax.swing.JOptionPane.showMessageDialog(this,
+					"Relatório exportado com sucesso!",
+					"Sucesso",
+					javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+		} catch (Exception ex) {
+			// Tratamento de erros
+			System.err.println("Erro ao exportar o relatório: " + ex.getMessage());
+			ex.printStackTrace();
+
+			// Opcional: Mensagem de erro para o usuário
+			javax.swing.JOptionPane.showMessageDialog(this,
+					"Erro ao exportar o relatório: " + ex.getMessage(),
+					"Erro",
+					javax.swing.JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 }
