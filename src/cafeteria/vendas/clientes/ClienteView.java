@@ -145,7 +145,14 @@ public class ClienteView extends JInternalFrame {
 	 */
 	protected void onClickPesquisar() {
 		// TODO: Implementar
+		// 1) ler campo de tela ID
+		// 2) chamar o this.service.findCliente(id)
+		// 3) ler o retorno do this.service
+		// 4) popular nos campos de tela com base no cliente
+		String id = this.id.getText();
+		this.service.findCliente(id);
 		System.out.println("==> onClickPesquisar");
+
 	}
 
 	/**
