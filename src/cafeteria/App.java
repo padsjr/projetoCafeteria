@@ -22,8 +22,8 @@ public class App {
         	//UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 
 			// Temas multiplataforma
-			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        	UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        	//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 
 			// Caso queira usar, pode importar um tema de terceiro (similar como usamos para incluir o driver do JDBC)
 			// https://github.com/JFormDesigner/FlatLaf

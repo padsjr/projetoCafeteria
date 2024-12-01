@@ -2,6 +2,7 @@ package cafeteria;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 public class DbConn {
         private static final String URL = "jdbc:postgresql://localhost:5438/cafeteria";
         private static final String USER = "senai";
@@ -19,7 +20,7 @@ public class DbConn {
             }
             return connection;
         }
-    public static void closeConnection() {
+    public static Connection closeConnection() {
         if (connection != null) {
             try {
                 connection.close();
@@ -27,6 +28,6 @@ public class DbConn {
             } catch (SQLException e) {
                 System.out.println("Erro ao fechar a conexão com o banco de dados: " + e.getMessage());
             }
-        }
+        } return connection;
     }
 }
