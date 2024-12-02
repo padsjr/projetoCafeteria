@@ -2,7 +2,6 @@ package cafeteria;
 
 import java.sql.Connection;
 import java.util.Locale;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -10,6 +9,7 @@ import javax.swing.UIManager;
 public class App {
 
 	public static void main(String[] args) {
+                @SuppressWarnings("unused")
 		Connection conn = DbConn.getConnection();
 
 		Locale.setDefault(Locale.forLanguageTag("pt-BR"));

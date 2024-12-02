@@ -3,6 +3,7 @@ package cafeteria.vendas.relatorios;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -53,7 +54,7 @@ public class RelatorioView extends JInternalFrame {
 		nomeRelatorio.setColumns(10);
 		nomeRelatorio.setEditable(false);
 		// TODO: Descomentar a linha abaixo quando já existir um exportador criado na TelaPricipal
-		//nomeRelatorio.setText(exportador.getNomeRelatorio());
+		nomeRelatorio.setText(exportador.getNomeRelatorio());
 
 		JLabel lbDestino = new JLabel("Destino:");
 		lbDestino.setBounds(31, 73, 60, 17);
@@ -127,7 +128,76 @@ public class RelatorioView extends JInternalFrame {
 	 */
 	protected void onClickExportar() {
 		// TODO: Implementar
-		System.out.println("==> onClickExportar");
-	}
+	if (destinoSelecionado == null) {
+			System.err.println("Destino não selecionado.");
+			return;
+		}
 
+		// Verifica se o destino é um diretório
+		if (destinoSelecionado.isDirectory()) {
+			// Adiciona o nome do relatório ao caminho do diretório
+			String nomeArquivo = nomeRelatorio.getText().replaceAll("[\\\\/:*?\"<>|]", "_") + ".txt";
+			String caminhoDestino = destinoSelecionado.getAbsolutePath() + File.separator + nomeArquivo;
+			destinoSelecionado = new File(caminhoDestino);
+
+			// Verifica se o diretório existe, se não, cria
+			File diretórioDestino = new File(destinoSelecionado.getParent());
+			if (!diretórioDestino.exists()) {
+				if (!diretórioDestino.mkdirs()) {
+					System.err.println("Erro ao criar o diretório no destino.");
+					return;
+				}
+			}
+
+			// Verifica se o arquivo existe, se não, cria
+			if (!destinoSelecionado.exists()) {
+				try {
+					boolean criado = destinoSelecionado.createNewFile(); // Tenta criar o arquivo
+					if (!criado) {
+						System.err.println("Erro ao criar o arquivo no destino.");
+						return;
+					}
+				} catch (IOException e) {
+					System.err.println("Erro ao tentar criar o arquivo: " + e.getMessage());
+					e.printStackTrace();
+					return;
+				}
+			}
+		}
+
+		// Verifica se o destino (agora garantido ser um arquivo) pode ser escrito
+		//if (!destinoSelecionado.canWrite()) {
+		//	System.err.println("Destino inválido ou não selecionado.AQUI");
+		//	return;
+		//}
+
+		try {
+			// Verificando se o nome do relatório está preenchido
+			if (nomeRelatorio.getText().isEmpty()) {
+				System.err.println("Nome do relatório não está preenchido.");
+				return;
+			}
+
+			// Chamada ao exportador para gerar o relatório
+			exportador.exportar(destinoSelecionado);
+			System.out.println("Relatório exportado com sucesso para: " + destinoSelecionado.getAbsolutePath());
+
+			// Opcional: Mensagem de sucesso para o usuário
+			javax.swing.JOptionPane.showMessageDialog(this,
+					"Relatório exportado com sucesso!",
+					"Sucesso",
+					javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+		} catch (Exception ex) {
+			// Tratamento de erros
+			System.err.println("Erro ao exportar o relatório: " + ex.getMessage());
+			ex.printStackTrace();
+
+			// Opcional: Mensagem de erro para o usuário
+			javax.swing.JOptionPane.showMessageDialog(this,
+					"Erro ao exportar o relatório: " + ex.getMessage(),
+					"Erro",
+					javax.swing.JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
