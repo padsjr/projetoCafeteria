@@ -2,7 +2,6 @@ package cafeteria;
 
 import java.sql.Connection;
 import java.util.Locale;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -10,6 +9,7 @@ import javax.swing.UIManager;
 public class App {
 
 	public static void main(String[] args) {
+                @SuppressWarnings("unused")
 		Connection conn = DbConn.getConnection();
 
 		Locale.setDefault(Locale.forLanguageTag("pt-BR"));
@@ -22,8 +22,8 @@ public class App {
         	//UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 
 			// Temas multiplataforma
-			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        	UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        	//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 
 			// Caso queira usar, pode importar um tema de terceiro (similar como usamos para incluir o driver do JDBC)
 			// https://github.com/JFormDesigner/FlatLaf

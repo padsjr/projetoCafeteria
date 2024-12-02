@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
@@ -28,18 +29,24 @@ public class ClienteView extends JInternalFrame {
 	private JTextField nome;
 	private JFormattedTextField telefone;
 
-	private JButton btSalvar;
-	private JButton btVoltar;
-	private JButton btNovoCliente;
-	private JButton btPesquisar;
+	private final JButton btSalvar;
+	private final JButton btVoltar;
+	private final JButton btNovoCliente;
+	private final JButton btPesquisar;
 
+	public String ultimaAcao = null;
+	int idInt;
+
+	public ClienteService clienteService;
 	private IClienteService service = null;
 
 	/**
 	 * Cria a janela do CRUD do cliente
 	 */
+        
 	public ClienteView(IClienteService service) {
 		this.service = service;
+		this.clienteService = new ClienteService();
 
 		setClosable(true);
 		setIconifiable(true);
@@ -80,7 +87,6 @@ public class ClienteView extends JInternalFrame {
 			getContentPane().add(telefone);
 			telefone.setColumns(10);
 		} catch (ParseException e) {
-			e.printStackTrace();
 		}
 
 		btSalvar = new JButton("Salvar");
@@ -108,6 +114,7 @@ public class ClienteView extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickIncluirNovoCliente();
+				ultimaAcao = "Incluir";
 			}
 		});
 		btNovoCliente.setBounds(400, 35, 139, 27);
@@ -118,6 +125,7 @@ public class ClienteView extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickPesquisar();
+				ultimaAcao = "Pesquisar";
 			}
 		});
 		btPesquisar.setBounds(235, 35, 96, 27);
@@ -141,43 +149,145 @@ public class ClienteView extends JInternalFrame {
 	}
 
 	/**
-	 * Executa as tarefas para efetuar uma pesquisa com base no ID informado
+	 * Executar as tarefas para efetuar uma pesquisa com base no ID informado
 	 */
 	protected void onClickPesquisar() {
-		// TODO: Implementar
+		clienteService = new ClienteService();
 		// 1) ler campo de tela ID
-		// 2) chamar o this.service.findCliente(id)
+		String idString = this.id.getText();
+		
+		// 2) chamar o this.service.buscarCliente(id)
+		int clienteId = Integer.parseInt(idString);
+		Cliente cliente = clienteService.buscarCliente(clienteId);
+		
 		// 3) ler o retorno do this.service
-		// 4) popular nos campos de tela com base no cliente
-		String id = this.id.getText();
-		this.service.findCliente(id);
-		System.out.println("==> onClickPesquisar");
+		if (cliente != null) {
+			// 4) popular nos campos de tela com base no cliente
+			this.nome.setText(cliente.getNome());
+			this.telefone.setText(cliente.getTelefone());
+			id.setEnabled(true);
+			nome.setEnabled(true);
+			telefone.setEnabled(true);
+			// Habilitar os botões de ação
+			btSalvar.setEnabled(true);
+			btVoltar.setEnabled(true);
+		} else {
+			JOptionPane.showMessageDialog(null,"Cliente não encontrado");
+			onClickVoltar();
 
+		}
+
+		
 	}
 
 	/**
-	 * Executa as tarefas para preparar a interface para a inclusão de um novo
+	 * Executar as tarefas para preparar a interface para a inclusão de um novo
 	 * cliente
 	 */
 	protected void onClickIncluirNovoCliente() {
-		// TODO: Implementar
-		System.out.println("==> onClickIncluirNovoCliente");
-	}
+		// Limpar os campos de entrada
+		id.setText("");
+		nome.setText("");
+		telefone.setText("");
 
+		// Habilitar os campos de entrada
+		id.setEnabled(true);
+		nome.setEnabled(true);
+		telefone.setEnabled(true);
+
+		// Configurar os botões de ação
+		btSalvar.setEnabled(true);
+		btVoltar.setEnabled(true);
+		btNovoCliente.setEnabled(false);
+		btPesquisar.setEnabled(false);
+
+		java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickIncluirNovoCliente");
+	}
 	/**
-	 * Executa as tarefas para voltar a inclusão de um cliente
+	 * Executar as tarefas para voltar a inclusão de um cliente
 	 */
 	protected void onClickVoltar() {
-		// TODO: Implementar
-		System.out.println("==> onClickVoltar");
+		// Limpar os campos de entrada
+		id.setText("");
+		nome.setText("");
+		telefone.setText("");
+
+		// Desabilitar os campos de entrada
+		id.setEnabled(true);
+		nome.setEnabled(false);
+		telefone.setEnabled(false);
+
+		// Configurar os botões de ação
+		btSalvar.setEnabled(false);
+		btVoltar.setEnabled(false);
+		btNovoCliente.setEnabled(true);
+		btPesquisar.setEnabled(true);
+
+		java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickVoltar");
 	}
 
-	/**
-	 * Executa as tarefas para salvar a inclusão de um novo cliente
-	 */
-	protected void onClickSalvar() {
-		// TODO: Implementar
-		System.out.println("==> onClickSalvar");
-	}
+	
+protected void onClickSalvar() {
+	switch(ultimaAcao) {
+		case "Incluir": {
+			try {
+				idInt = Integer.parseInt(this.id.getText());
+			} catch (Exception e) { JOptionPane.showMessageDialog( null, "ID inválido" ); 
+			return;
+			}		
 
+			String nomeText = this.nome.getText();
+			String telefoneText = this.telefone.getText();
+			Cliente cliente = new Cliente(idInt, nomeText, telefoneText);
+			clienteService.adicionarCliente(cliente);
+			JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
+			id.setText("");
+			nome.setText("");
+			telefone.setText("");
+			onClickVoltar();
+			break;
+		}
+		case "Pesquisar": {
+			// Ler os dados dos campos de entrada
+	int idInt = Integer.parseInt(this.id.getText());
+	String nomeText = this.nome.getText();
+	String telefoneText = this.telefone.getText();
+
+	// Verificar se o cliente já existe
+	Cliente clienteExistente = new Cliente(idInt, nomeText, telefoneText);
+	
+		// Perguntar ao usuário se deseja atualizar o cliente existente
+		int resposta = JOptionPane.showConfirmDialog(null, "Cliente já existe. Deseja atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
+		if (resposta == JOptionPane.YES_OPTION) {
+			// Atualizar o cliente existente
+			clienteExistente.setId(idInt);
+			clienteExistente.setNome(nomeText);
+			clienteExistente.setTelefone(telefoneText);
+			clienteService.atualizarCliente(clienteExistente);
+			JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso");
+			onClickVoltar();
+		}
+	 else {
+		onClickVoltar();
+		}
+	
+		// Limpar os campos de entrada
+		this.id.setText("");
+		this.nome.setText("");
+		this.telefone.setText("");
+	
+		// Configurar os botões de ação após salvar
+		btSalvar.setEnabled(false);
+		btVoltar.setEnabled(false);
+		btNovoCliente.setEnabled(true);
+		btPesquisar.setEnabled(true);
+	
+		
+	
+		java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickSalvar");
+			break;
+		}
+		default: System.out.println("Ação não reconhecida");
+	}
+	}
 }
