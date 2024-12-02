@@ -6,7 +6,7 @@ public interface IProdutoService {
 
     public void adicionarProduto(EstoqueProduto produto);
 
-    public void editarProduto(int id);
+    public void editarProduto(EstoqueProduto produto);
 
     public Produto procurarProduto(int id);
 }

@@ -5,8 +5,8 @@ public class EstoqueProduto extends Produto {
     int estoque;
     
     public EstoqueProduto(String nome, UnidadeMedida medida, double preco, int estoque) {
-            this.nome = nome;
-            this.medida = medida;
+        this.nome = nome;
+        this.medida = medida;
         this.preco = preco;
         this.estoque = estoque;
     } 

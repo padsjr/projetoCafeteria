@@ -15,10 +15,27 @@ UnidadeMedida medidaConvertida;
 EstoqueProduto produto;
 int medidaInt;
 Connection conn = new DbConn().getConnection();
+
+
     @Override
-    public void editarProduto(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'editarProduto'");
+    public void editarProduto(EstoqueProduto produto) {
+            String sql = "UPDATE produto SET nome = ?, medida = ?, preco = ?, estoque = ? where id = ? ";
+            try(PreparedStatement ps = conn.prepareStatement(sql);) {
+                
+                ps.setString(1, produto.getNome());
+                conversaoMedida(produto.getMedida());
+                ps.setInt(2, medidaInt);
+                ps.setDouble(3, produto.getPreco());
+                ps.setInt(4, produto.getEstoque());
+                ps.setInt(5, produto.getId());
+
+                ps.executeUpdate();
+                ps.close();
+
+            } catch (SQLException e) {
+                System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+                e.printStackTrace();
+            }
     }
 
     @Override
@@ -44,8 +61,6 @@ Connection conn = new DbConn().getConnection();
             e.printStackTrace();
         }
         
-        conn = DbConn.closeConnection();
-        
     }
    
     @Override
@@ -70,16 +85,15 @@ Connection conn = new DbConn().getConnection();
 
                 resultQuery.close();
             } else {
-                System.out.println("Produto não encontrado com o ID: " + id);
+                JOptionPane.showMessageDialog(null, "Produto não encontrado com o ID: " + id);
             }
             ps.close();
             
 
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+            JOptionPane.showMessageDialog(null,"Erro ao conectar ao banco de dados: " + e.getMessage());
             e.printStackTrace();
         }
-        conn = DbConn.closeConnection();
 
         return produto;
         
