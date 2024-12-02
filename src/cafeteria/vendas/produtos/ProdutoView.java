@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -25,7 +26,7 @@ public class ProdutoView extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextField id;
+	private JTextField id = null;
 	private JTextField nome;
 	private JComboBox<UnidadeMedida> medida;
 	private JFormattedTextField preco;
@@ -36,6 +37,14 @@ public class ProdutoView extends JInternalFrame {
 	private JButton btVoltar;
 	private JButton btNovoProduto;
 	private JButton btPesquisar;
+
+	public String ultimaAcao = null;
+	String nomeString;
+	double precoDouble;
+	int idInt;
+	UnidadeMedida unidadeMedida;
+	int estoqueInt = 0;
+	EstoqueProduto produtoExistente;
 
 	private IProdutoService service = null;
 
@@ -104,6 +113,7 @@ public class ProdutoView extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickIncluirNovoProduto();
+				ultimaAcao = "Incluir";
 			}
 		});
 		btNovoProduto.setBounds(400, 35, 139, 27);
@@ -114,6 +124,7 @@ public class ProdutoView extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickPesquisar();
+				ultimaAcao = "Pesquisar";
 			}
 		});
 		btPesquisar.setBounds(235, 35, 96, 27);
@@ -165,14 +176,43 @@ public class ProdutoView extends JInternalFrame {
 		temEstoque.setEnabled(false);
 		estoque.setEnabled(false);
 	}
-
+	ProdutoService produtoService = new ProdutoService();
 	/**
 	 * Executa as tarefas para efetuar uma pesquisa com base no ID informado
 	 */
 	protected void onClickPesquisar() {
-		// TODO: Implementar
-		System.out.println("==> onClickPesquisar");
-	}
+    String idText = id.getText();
+	
+    try {
+        int idInt = Integer.parseInt(idText);
+        
+        produtoExistente = produtoService.procurarProduto(idInt);
+        
+        if (produtoExistente != null) {
+            nome.setEnabled(true);
+            medida.setEnabled(true);
+            preco.setEnabled(true);
+            temEstoque.setEnabled(true);
+            estoque.setEnabled(true);
+			btSalvar.setEnabled(true);
+			btVoltar.setEnabled(true);
+
+
+            nome.setText(produtoExistente.getNome());
+            preco.setText(String.valueOf(produtoExistente.getPreco()));
+			estoque.setText(String.valueOf(produtoExistente.getEstoque()));
+			medida.setSelectedItem(produtoExistente.getMedida());
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto não encontrado.");
+			onClickVoltar();
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "ID inválido. Por favor, insira um número inteiro.");
+    }
+    
+    System.out.println("==> onClickPesquisar");
+}
 
 	/**
 	 * Executa as tarefas para preparar a interface para a inclusão de um novo
@@ -180,7 +220,19 @@ public class ProdutoView extends JInternalFrame {
 	 */
 	protected void onClickIncluirNovoProduto() {
 		// TODO: Implementar
+
+		nome.setEnabled(true);
+		medida.setEnabled(true);
+		preco.setEnabled(true);
+		temEstoque.setEnabled(true);
+		estoque.setEnabled(true);
+		btNovoProduto.setEnabled(false);
+		btPesquisar.setEnabled(false);
+		btVoltar.setEnabled(true);
+		btSalvar.setEnabled(true);
+
 		System.out.println("==> onClickIncluirNovoProduto");
+
 	}
 
 	/**
@@ -188,6 +240,25 @@ public class ProdutoView extends JInternalFrame {
 	 */
 	protected void onClickVoltar() {
 		// TODO: Implementar
+		// configura os botões de ação
+		id.setText("");
+		nome.setText("");
+		preco.setValue(null);
+		estoque.setText("");
+		temEstoque.setSelected(false);
+
+		btSalvar.setEnabled(false);
+		btVoltar.setEnabled(false);
+		btNovoProduto.setEnabled(true);
+		btPesquisar.setEnabled(true);
+
+		// configura o comportamento dos campos
+		id.setEnabled(true);
+		nome.setEnabled(false);
+		medida.setEnabled(false);
+		preco.setEnabled(false);
+		temEstoque.setEnabled(false);
+		estoque.setEnabled(false);
 		System.out.println("==> onClickVoltar");
 	}
 
@@ -196,6 +267,101 @@ public class ProdutoView extends JInternalFrame {
 	 */
 	protected void onClickSalvar() {
 		// TODO: Implementar
-		System.out.println("==> onClickSalvar");
+
+		switch (ultimaAcao){
+			case "Incluir":{
+		
+				try{
+					precoDouble = ((Number) preco.getValue()).doubleValue();
+				}catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Preço inválido. Por favor, insira um número.");
+					return;
+				}
+
+				try{
+					idInt = Integer.parseInt(id.getText());
+				}catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Id Inválido. Por favor, insira um número.");
+					return;
+				}
+
+				if (temEstoque.isSelected()){
+					try{
+						estoqueInt = Integer.parseInt(estoque.getText());
+					}catch(Exception e){
+						JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
+                		return;
+					}
+				}
+				nomeString = nome.getText();
+				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
+				EstoqueProduto novoProduto = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
+				produtoService.adicionarProduto(novoProduto);
+				JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
+
+				id.setText("");
+				nome.setText("");
+				preco.setValue(null);
+				estoque.setText("");
+				temEstoque.setSelected(false);
+
+				onClickVoltar();
+		
+				System.out.println("==> onClickSalvar");
+				break;
+			}
+			case "Pesquisar":{
+				try{
+					precoDouble = ((Number) preco.getValue()).doubleValue();
+				}catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Preço inválido. Por favor, insira um número.");
+					return;
+				}
+
+				try{
+					idInt = Integer.parseInt(id.getText());
+				}catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Id Inválido. Por favor, insira um número.");
+					return;
+				}
+
+				if (temEstoque.isSelected()){
+					try{
+						estoqueInt = Integer.parseInt(estoque.getText());
+					}catch(Exception e){
+						JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
+                		return;
+					}
+				}
+				nomeString = nome.getText();
+				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
+				
+
+				EstoqueProduto produtoAtualizado = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
+
+				int resposta = JOptionPane.showConfirmDialog(null, "Cliente Já Existente. Deseja Atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
+				if(resposta == JOptionPane.YES_OPTION){
+	
+					produtoAtualizado.setNome(nomeString);
+					produtoAtualizado.setMedida(unidadeMedida);
+					produtoAtualizado.setPreco(precoDouble);
+					produtoAtualizado.setEstoque(estoqueInt);
+					produtoAtualizado.setId(idInt);
+
+					produtoService.editarProduto(produtoAtualizado);
+
+					JOptionPane.showMessageDialog(null, "Cliente Atualizado Com Sucesso!");
+				}else{
+					onClickVoltar();
+				}
+				
+				onClickVoltar();
+				break;
+			}
+			default: System.out.println("não deu né");
+			break;
+
+
+		}
 	}
 }

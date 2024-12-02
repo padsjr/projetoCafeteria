@@ -19,6 +19,7 @@ import cafeteria.vendas.clientes.ClienteService;
 import cafeteria.vendas.clientes.ClienteView;
 import cafeteria.vendas.clientes.IClienteService;
 import cafeteria.vendas.produtos.IProdutoService;
+import cafeteria.vendas.produtos.ProdutoService;
 import cafeteria.vendas.produtos.ProdutoView;
 import cafeteria.vendas.relatorios.RelatorioClientes;
 import cafeteria.vendas.relatorios.RelatorioExportavelEmArquivoTexto;
@@ -127,6 +128,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 	 * Método para criação dos services que serão usados
 	 */
 	protected void createServices() {
+		this.produtoService = new ProdutoService();
 		// TODO: Instancie aqui os services que serão usados
 		this.clienteService = new ClienteService();
 	
