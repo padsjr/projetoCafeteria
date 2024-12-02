@@ -1,4 +1,4 @@
-package cafeteria.vendas.clientes;
+package cafeteria.clientes;
 
 public interface IClienteService {
 

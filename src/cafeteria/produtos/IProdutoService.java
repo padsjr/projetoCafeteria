@@ -1,4 +1,4 @@
-package cafeteria.vendas.produtos;
+package cafeteria.produtos;
 
 public interface IProdutoService {
 

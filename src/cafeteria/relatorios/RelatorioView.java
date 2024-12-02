@@ -1,8 +1,9 @@
-package cafeteria.vendas.relatorios;
+package cafeteria.relatorios;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -10,7 +11,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class RelatorioView extends JInternalFrame {
+public class RelatorioView extends JInternalFrame  {
 
 	private static final int POSICAO_X_INICIAL = 90;
 	private static final int POSICAO_Y_INICIAL = 90;
@@ -53,7 +54,7 @@ public class RelatorioView extends JInternalFrame {
 		nomeRelatorio.setColumns(10);
 		nomeRelatorio.setEditable(false);
 		// TODO: Descomentar a linha abaixo quando já existir um exportador criado na TelaPricipal
-		//nomeRelatorio.setText(exportador.getNomeRelatorio());
+		nomeRelatorio.setText(exportador.getNomeRelatorio());
 
 		JLabel lbDestino = new JLabel("Destino:");
 		lbDestino.setBounds(31, 73, 60, 17);
@@ -126,15 +127,51 @@ public class RelatorioView extends JInternalFrame {
 	 * Executa as tarefas para exportar a exportação do relatório
 	 */
 	protected void onClickExportar() {
-		if (destinoSelecionado == null || !destinoSelecionado.canWrite()) {
-			System.err.println("Destino inválido ou não selecionado.");
+
+		if (destinoSelecionado == null) {
+			System.err.println("Destino não selecionado.");
 			return;
 		}
 
-		try {
-			// Obtendo o caminho absoluto do destino selecionado
-			String caminhoDestino = destinoSelecionado.getAbsolutePath();
+		// Verifica se o destino é um diretório
+		if (destinoSelecionado.isDirectory()) {
+			// Adiciona o nome do relatório ao caminho do diretório
+			String nomeArquivo = nomeRelatorio.getText().replaceAll("[\\\\/:*?\"<>|]", "_") + ".txt";
+			String caminhoDestino = destinoSelecionado.getAbsolutePath() + File.separator + nomeArquivo;
+			destinoSelecionado = new File(caminhoDestino);
 
+			// Verifica se o diretório existe, se não, cria
+			File diretórioDestino = new File(destinoSelecionado.getParent());
+			if (!diretórioDestino.exists()) {
+				if (!diretórioDestino.mkdirs()) {
+					System.err.println("Erro ao criar o diretório no destino.");
+					return;
+				}
+			}
+
+			// Verifica se o arquivo existe, se não, cria
+			if (!destinoSelecionado.exists()) {
+				try {
+					boolean criado = destinoSelecionado.createNewFile(); // Tenta criar o arquivo
+					if (!criado) {
+						System.err.println("Erro ao criar o arquivo no destino.");
+						return;
+					}
+				} catch (IOException e) {
+					System.err.println("Erro ao tentar criar o arquivo: " + e.getMessage());
+					e.printStackTrace();
+					return;
+				}
+			}
+		}
+
+		// Verifica se o destino (agora garantido ser um arquivo) pode ser escrito
+		//if (!destinoSelecionado.canWrite()) {
+		//	System.err.println("Destino inválido ou não selecionado.AQUI");
+		//	return;
+		//}
+
+		try {
 			// Verificando se o nome do relatório está preenchido
 			if (nomeRelatorio.getText().isEmpty()) {
 				System.err.println("Nome do relatório não está preenchido.");
@@ -142,8 +179,8 @@ public class RelatorioView extends JInternalFrame {
 			}
 
 			// Chamada ao exportador para gerar o relatório
-			exportador.exportar(new File(caminhoDestino));
-			System.out.println("Relatório exportado com sucesso para: " + caminhoDestino);
+			exportador.exportar(destinoSelecionado);
+			System.out.println("Relatório exportado com sucesso para: " + destinoSelecionado.getAbsolutePath());
 
 			// Opcional: Mensagem de sucesso para o usuário
 			javax.swing.JOptionPane.showMessageDialog(this,
@@ -163,5 +200,5 @@ public class RelatorioView extends JInternalFrame {
 					javax.swing.JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
 }
+

@@ -28,9 +28,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import cafeteria.vendas.clientes.IClienteService;
-import cafeteria.vendas.produtos.IProdutoService;
-import cafeteria.vendas.produtos.Produto;
+import cafeteria.clientes.IClienteService;
+import cafeteria.produtos.IProdutoService;
+import cafeteria.produtos.Produto;
 
 public class VendaView extends JInternalFrame {
 

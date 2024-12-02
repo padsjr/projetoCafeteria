@@ -15,12 +15,11 @@ import javax.swing.KeyStroke;
 
 import cafeteria.vendas.IVendaService;
 import cafeteria.vendas.VendaView;
-import cafeteria.vendas.clientes.ClienteView;
-import cafeteria.vendas.clientes.IClienteService;
-import cafeteria.vendas.produtos.IProdutoService;
-import cafeteria.vendas.produtos.ProdutoView;
-import cafeteria.vendas.relatorios.RelatorioExportavelEmArquivoTexto;
-import cafeteria.vendas.relatorios.RelatorioView;
+import cafeteria.clientes.ClienteView;
+import cafeteria.clientes.IClienteService;
+import cafeteria.produtos.IProdutoService;
+import cafeteria.produtos.ProdutoView;
+import cafeteria.relatorios.*;
 
 /*
  * Tela Principa
@@ -164,7 +163,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO: Instanciar e passar o exportador correto para o método
-				createAndShowFrameExportarRelatorio(null);
+				createAndShowFrameExportarRelatorio(new RelatorioClientes());
 			}
 		});
 		submenu.add(menuItem);
@@ -199,7 +198,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO: Instanciar e passar o exportador correto para o método
-				createAndShowFrameExportarRelatorio(null);
+				createAndShowFrameExportarRelatorio(new RelatorioProduto());
 			}
 		});
 		submenu.add(menuItem);
@@ -234,8 +233,11 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Instanciar e passar o exportador correto para o método
-				createAndShowFrameExportarRelatorio(null);
+				// Instanciar o exportador correto
+				RelatorioExportavelEmArquivoTexto exportadorVendas = new RelatorioVendas();
+
+				// Criar e exibir o frame para exportar o relatório
+				createAndShowFrameExportarRelatorio(exportadorVendas);
 			}
 		});
 		submenu.add(menuItem);

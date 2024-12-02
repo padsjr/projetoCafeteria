@@ -1,4 +1,4 @@
-package cafeteria.vendas.relatorios;
+package cafeteria.relatorios;
 
 import java.io.File;
 

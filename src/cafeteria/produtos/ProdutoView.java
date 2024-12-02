@@ -1,4 +1,4 @@
-package cafeteria.vendas.produtos;
+package cafeteria.produtos;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
