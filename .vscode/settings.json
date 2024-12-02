@@ -3,6 +3,7 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\Fabrin\\Downloads\\postgresql-42.7.3.jar"
+        "c:\\Users\\Fabrin\\Downloads\\postgresql-42.7.3.jar",
+        "c:\\Users\\pedro\\Downloads\\postgresql-42.7.4.jar"
     ]
 }
