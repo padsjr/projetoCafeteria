@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 public class ClienteService implements IClienteService {
     private final Connection connection;
 
@@ -27,7 +29,8 @@ public class ClienteService implements IClienteService {
             
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, e);
+            //Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(null, "Não pode Haver campos em Branco");
         }
 
     }

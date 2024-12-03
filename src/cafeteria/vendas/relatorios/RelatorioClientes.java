@@ -18,7 +18,7 @@ public class RelatorioClientes implements RelatorioExportavelEmArquivoTexto {
     @Override
     public void exportar(File destino) {
         // SQL para obter todos os clientes
-        String sql = "SELECT id, nome, telefone FROM cliente ORDER BY nome";
+        String sql = "SELECT id, nome, telefone FROM cliente ORDER BY id";
 
         // Obtém a conexão gerenciada pelo DbConn
         Connection conn = DbConn.getConnection();

@@ -1,5 +1,7 @@
 package cafeteria.vendas.clientes;
 
+import javax.swing.JOptionPane;
+
 public class Cliente {
     private int id;
     private String nome;
@@ -31,7 +33,9 @@ public class Cliente {
 
     public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome não pode ser vazio."); 
+            JOptionPane.showMessageDialog(null, "Nome não pode estar em branco.");
+            throw new IllegalArgumentException("Nome não pode ser vazio.");
+            
         }
         this.nome = nome; 
     }
@@ -42,6 +46,7 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         if (telefone == null || telefone.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Telefone não pode estar em branco.");
             throw new IllegalArgumentException("Telefone não pode ser vazio."); 
         }
         this.telefone = telefone; 

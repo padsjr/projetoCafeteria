@@ -197,6 +197,8 @@ public class ProdutoView extends JInternalFrame {
             estoque.setEnabled(true);
 			btSalvar.setEnabled(true);
 			btVoltar.setEnabled(true);
+			btNovoProduto.setEnabled(false);
+			btPesquisar.setEnabled(false);
 
 
             nome.setText(produtoExistente.getNome());
@@ -287,6 +289,10 @@ public class ProdutoView extends JInternalFrame {
 				if (temEstoque.isSelected()){
 					try{
 						estoqueInt = Integer.parseInt(estoque.getText());
+						if (estoqueInt == 0){
+							JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
+                			return;
+						}
 					}catch(Exception e){
 						JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
                 		return;
@@ -330,6 +336,10 @@ public class ProdutoView extends JInternalFrame {
 				if (temEstoque.isSelected()){
 					try{
 						estoqueInt = Integer.parseInt(estoque.getText());
+						if (estoqueInt == 0){
+							JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
+                			return;
+						}
 					}catch(Exception e){
 						JOptionPane.showMessageDialog(null, "Estoque inválido. Por favor, insira um número.");
                 		return;

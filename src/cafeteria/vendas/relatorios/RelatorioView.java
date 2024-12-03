@@ -55,7 +55,6 @@ public class RelatorioView extends JInternalFrame {
 		getContentPane().add(nomeRelatorio);
 		nomeRelatorio.setColumns(10);
 		nomeRelatorio.setEditable(false);
-		// TODO: Descomentar a linha abaixo quando já existir um exportador criado na TelaPricipal
 		nomeRelatorio.setText(exportador.getNomeRelatorio());
 
 		JLabel lbDestino = new JLabel("Destino:");
@@ -137,7 +136,7 @@ public class RelatorioView extends JInternalFrame {
     // Verifica se o destino é um diretório
     if (destinoSelecionado.isDirectory()) {
         // Adiciona o nome do relatório ao caminho do diretório
-        String nomeArquivo = nomeRelatorio.getText().replaceAll("[\\\\/:*?\"<>|]", "_") + ".txt";
+        String nomeArquivo = nomeRelatorio.getText().replaceAll("[\\\\/:*?\"<>|]", "") + ".txt";
         String caminhoDestino = destinoSelecionado.getAbsolutePath() + File.separator + nomeArquivo;
         destinoSelecionado = new File(caminhoDestino);
 
@@ -194,9 +193,7 @@ public class RelatorioView extends JInternalFrame {
                 "Erro",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
 
-    } finally {
-        // Garantir que a conexão seja fechada após a exportação
-        DbConn.closeConnection();
-    }
+	}
+	onClickCancelar();
 }
 }

@@ -171,13 +171,13 @@ public class ClienteView extends JInternalFrame {
 			// Habilitar os botões de ação
 			btSalvar.setEnabled(true);
 			btVoltar.setEnabled(true);
+			btNovoCliente.setEnabled(false);
+			btPesquisar.setEnabled(false);
 		} else {
 			JOptionPane.showMessageDialog(null,"Cliente não encontrado");
 			onClickVoltar();
 
-		}
-
-		
+		}	
 	}
 
 	/**
@@ -226,7 +226,10 @@ public class ClienteView extends JInternalFrame {
 		java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickVoltar");
 	}
 
-	
+int tamanhoMaximo = 11;
+int tamanhoMinimo = 10;
+String unmaskedTelefone;
+
 protected void onClickSalvar() {
 	switch(ultimaAcao) {
 		case "Incluir": {
@@ -235,10 +238,9 @@ protected void onClickSalvar() {
 			} catch (Exception e) { JOptionPane.showMessageDialog( null, "ID inválido" ); 
 			return;
 			}		
-			int tamanhoMaximo = 11;
-			int tamanhoMinimo = 10;
+			
 			String telefoneText = this.telefone.getText();
-			String unmaskedTelefone = telefoneText.replaceAll("[^0-9]", "");
+			unmaskedTelefone = telefoneText.replaceAll("[^0-9]", "");
 			String nomeText = this.nome.getText();
 			Cliente cliente;
 			System.out.println(telefoneText);
@@ -258,42 +260,49 @@ protected void onClickSalvar() {
 		}
 		case "Pesquisar": {
 			// Ler os dados dos campos de entrada
-	int idInt = Integer.parseInt(this.id.getText());
-	String nomeText = this.nome.getText();
-	String telefoneText = this.telefone.getText();
+		int idInt = Integer.parseInt(this.id.getText());
+		String nomeText = this.nome.getText();
+		String telefoneText = this.telefone.getText();
 
-	// Verificar se o cliente já existe
-	Cliente clienteExistente = new Cliente(idInt, nomeText, telefoneText);
+		// Verificar se o cliente já existe
+		Cliente clienteExistente = new Cliente(idInt, nomeText, telefoneText);
 	
 		// Perguntar ao usuário se deseja atualizar o cliente existente
 		int resposta = JOptionPane.showConfirmDialog(null, "Cliente já existe. Deseja atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
 		if (resposta == JOptionPane.YES_OPTION) {
-			// Atualizar o cliente existente
-			clienteExistente.setId(idInt);
-			clienteExistente.setNome(nomeText);
-			clienteExistente.setTelefone(telefoneText);
-			clienteService.atualizarCliente(clienteExistente);
-			JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso");
+			
+			unmaskedTelefone = telefoneText.replaceAll("[^0-9]", "");
+			if(unmaskedTelefone.length() > tamanhoMinimo && unmaskedTelefone.length() <= tamanhoMaximo){
+				clienteExistente.setId(idInt);
+				clienteExistente.setNome(nomeText);
+				clienteExistente.setTelefone(telefoneText);
+				clienteService.atualizarCliente(clienteExistente);
+				JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso");
+				onClickVoltar();
+			}else{
+				JOptionPane.showMessageDialog(null, "Telefone Inserido Não é válido");
+				onClickIncluirNovoCliente();
+			}
+			
+		}
+	 	else {
 			onClickVoltar();
 		}
-	 else {
-		onClickVoltar();
-		}
 	
-		// Limpar os campos de entrada
-		this.id.setText("");
-		this.nome.setText("");
-		this.telefone.setText("");
+			// Limpar os campos de entrada
+			this.id.setText("");
+			this.nome.setText("");
+			this.telefone.setText("");
 	
-		// Configurar os botões de ação após salvar
-		btSalvar.setEnabled(false);
-		btVoltar.setEnabled(false);
-		btNovoCliente.setEnabled(true);
-		btPesquisar.setEnabled(true);
+			// Configurar os botões de ação após salvar
+			btSalvar.setEnabled(false);
+			btVoltar.setEnabled(false);
+			btNovoCliente.setEnabled(true);
+			btPesquisar.setEnabled(true);
 	
 		
 	
-		java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickSalvar");
+			java.util.logging.Logger.getLogger(ClienteView.class.getName()).log(java.util.logging.Level.INFO, "==> onClickSalvar");
 			break;
 		}
 		default: System.out.println("Ação não reconhecida");

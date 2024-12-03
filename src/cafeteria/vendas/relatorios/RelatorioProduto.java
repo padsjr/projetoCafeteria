@@ -16,7 +16,7 @@ public class RelatorioProduto implements RelatorioExportavelEmArquivoTexto {
     @Override
 public void exportar(File destino) {
     // SQL para obter todos os produtos
-    String sql = "SELECT id, nome, medida, preco, estoque FROM produto ORDER BY nome";
+    String sql = "SELECT id, nome, medida, preco, estoque FROM produto ORDER BY id";
     Connection conn = null;
     try {
         conn = DbConn.getConnection(); // Obtém a conexão
@@ -45,9 +45,6 @@ public void exportar(File destino) {
         }
     } catch (SQLException e) {
         e.printStackTrace();
-    } finally {
-        // Garantir que a conexão seja fechada após a exportação
-        DbConn.closeConnection();
     }
 }
 }
