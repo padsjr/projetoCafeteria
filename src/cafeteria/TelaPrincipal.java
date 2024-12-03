@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import cafeteria.vendas.IVendaService;
+import cafeteria.vendas.VendaService;
 import cafeteria.vendas.VendaView;
 import cafeteria.vendas.clientes.ClienteService;
 import cafeteria.vendas.clientes.ClienteView;
@@ -130,6 +131,7 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 	protected void createServices() {
 		this.produtoService = new ProdutoService();
 		this.clienteService = new ClienteService();
+		this.vendaService = new VendaService();
 	
 	}
 

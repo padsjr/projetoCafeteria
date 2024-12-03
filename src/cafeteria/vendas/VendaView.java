@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +29,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import cafeteria.vendas.clientes.Cliente;
+import cafeteria.vendas.clientes.ClienteService;
 import cafeteria.vendas.clientes.IClienteService;
 import cafeteria.vendas.produtos.IProdutoService;
 import cafeteria.vendas.produtos.Produto;
@@ -326,7 +329,32 @@ public class VendaView extends JInternalFrame {
 	 * Executa as tarefas para efetuar uma pesquisa com base no ID cliente informado
 	 */
 	protected void onClickBuscarCliente() {
-		// TODO: Implementar
+		
+		clienteService = new ClienteService();
+		String idString = this.id.getText();
+		int clienteId = Integer.parseInt(idString);
+		Cliente cliente = clienteService.buscarCliente(clienteId);
+		
+		if (cliente != null) {
+
+			this.nomeCliente.setText(cliente.getNome());
+			id.setEnabled(false);
+			nomeCliente.setEnabled(false);
+			produto.setEnabled(true);
+			quantidade.setEditable(true);
+			desconto.setEditable(true);
+			
+			// Habilitar os botões de ação
+			btConfirmar.setEnabled(true);
+			btCancelar.setEnabled(true);
+			btBuscarCliente.setEnabled(false);
+			btAdicionarItem.setEnabled(true);
+			
+		} else {
+			JOptionPane.showMessageDialog(null,"Cliente não encontrado");
+			setupRegistrarNovaVenda();
+
+		}
 		System.out.println("==> onClickBuscarCliente");
 	}
 
