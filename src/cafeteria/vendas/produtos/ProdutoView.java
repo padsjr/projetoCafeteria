@@ -189,6 +189,7 @@ public class ProdutoView extends JInternalFrame {
         produtoExistente = produtoService.procurarProduto(idInt);
         
         if (produtoExistente != null) {
+			id.setEnabled(false);
             nome.setEnabled(true);
             medida.setEnabled(true);
             preco.setEnabled(true);
@@ -219,7 +220,6 @@ public class ProdutoView extends JInternalFrame {
 	 * produto
 	 */
 	protected void onClickIncluirNovoProduto() {
-		// TODO: Implementar
 
 		nome.setEnabled(true);
 		medida.setEnabled(true);
@@ -239,7 +239,7 @@ public class ProdutoView extends JInternalFrame {
 	 * Executa as tarefas para voltar a inclusão de um produto
 	 */
 	protected void onClickVoltar() {
-		// TODO: Implementar
+
 		// configura os botões de ação
 		id.setText("");
 		nome.setText("");
@@ -266,7 +266,6 @@ public class ProdutoView extends JInternalFrame {
 	 * Executa as tarefas para salvar a inclusão de um novo produto
 	 */
 	protected void onClickSalvar() {
-		// TODO: Implementar
 
 		switch (ultimaAcao){
 			case "Incluir":{
@@ -295,8 +294,10 @@ public class ProdutoView extends JInternalFrame {
 				}
 				nomeString = nome.getText();
 				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
+
 				EstoqueProduto novoProduto = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
 				produtoService.adicionarProduto(novoProduto);
+
 				JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
 
 				id.setText("");
@@ -311,6 +312,7 @@ public class ProdutoView extends JInternalFrame {
 				break;
 			}
 			case "Pesquisar":{
+				
 				try{
 					precoDouble = ((Number) preco.getValue()).doubleValue();
 				}catch(Exception e){
@@ -336,7 +338,6 @@ public class ProdutoView extends JInternalFrame {
 				nomeString = nome.getText();
 				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
 				
-
 				EstoqueProduto produtoAtualizado = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
 
 				int resposta = JOptionPane.showConfirmDialog(null, "Cliente Já Existente. Deseja Atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);

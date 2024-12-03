@@ -39,7 +39,7 @@ public class ClienteService implements IClienteService {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getTelefone());
             stmt.setInt(3, cliente.getId());
-            int att = stmt.executeUpdate();
+            stmt.executeUpdate();
             } catch (SQLException e) {
             Logger.getLogger(ClienteService.class.getName()).log(Level.SEVERE, "Erro ao atualizar cliente com ID: " + cliente.getId(), e);
         }

@@ -129,7 +129,6 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 	 */
 	protected void createServices() {
 		this.produtoService = new ProdutoService();
-		// TODO: Instancie aqui os services que serão usados
 		this.clienteService = new ClienteService();
 	
 	}
@@ -169,7 +168,6 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Instanciar e passar o exportador correto para o método
 				createAndShowFrameExportarRelatorio(new RelatorioClientes());
 			}
 		});
@@ -204,7 +202,6 @@ public class TelaPrincipal extends JFrame implements ActionListener {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Instanciar e passar o exportador correto para o método
 				createAndShowFrameExportarRelatorio(new RelatorioProduto());
 			}
 		});

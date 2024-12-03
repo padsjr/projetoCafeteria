@@ -57,7 +57,7 @@ Connection conn = new DbConn().getConnection();
             ps.close();
             
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+            JOptionPane.showMessageDialog(null,"Erro ao conectar ao banco de dados: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -65,8 +65,7 @@ Connection conn = new DbConn().getConnection();
    
     @Override
     public EstoqueProduto procurarProduto(int id) {
-        // TODO Auto-generated method stub
-        Connection conn = new DbConn().getConnection();
+        //Connection conn = new DbConn().getConnection();
         
         try {
             String sql = "select nome,medida,preco,estoque from produto where id = ?";
@@ -85,7 +84,8 @@ Connection conn = new DbConn().getConnection();
 
                 resultQuery.close();
             } else {
-                JOptionPane.showMessageDialog(null, "Produto não encontrado com o ID: " + id);
+                //JOptionPane.showMessageDialog(null, "Produto não encontrado com o ID: " + id);
+                System.out.println("Produto não encontrado com o ID: " + id);
             }
             ps.close();
             

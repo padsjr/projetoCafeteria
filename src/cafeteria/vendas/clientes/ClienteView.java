@@ -165,7 +165,7 @@ public class ClienteView extends JInternalFrame {
 			// 4) popular nos campos de tela com base no cliente
 			this.nome.setText(cliente.getNome());
 			this.telefone.setText(cliente.getTelefone());
-			id.setEnabled(true);
+			id.setEnabled(false);
 			nome.setEnabled(true);
 			telefone.setEnabled(true);
 			// Habilitar os botões de ação
@@ -235,16 +235,25 @@ protected void onClickSalvar() {
 			} catch (Exception e) { JOptionPane.showMessageDialog( null, "ID inválido" ); 
 			return;
 			}		
-
-			String nomeText = this.nome.getText();
+			int tamanhoMaximo = 11;
+			int tamanhoMinimo = 10;
 			String telefoneText = this.telefone.getText();
-			Cliente cliente = new Cliente(idInt, nomeText, telefoneText);
-			clienteService.adicionarCliente(cliente);
-			JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
-			id.setText("");
-			nome.setText("");
-			telefone.setText("");
-			onClickVoltar();
+			String unmaskedTelefone = telefoneText.replaceAll("[^0-9]", "");
+			String nomeText = this.nome.getText();
+			Cliente cliente;
+			System.out.println(telefoneText);
+			if (unmaskedTelefone.length() > tamanhoMinimo && unmaskedTelefone.length() <= tamanhoMaximo){
+				cliente = new Cliente(idInt, nomeText, telefoneText);
+				clienteService.adicionarCliente(cliente);
+				JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
+				id.setText("");
+				nome.setText("");
+				telefone.setText("");
+				onClickVoltar();
+			}else{
+				JOptionPane.showMessageDialog(null, "Telefone Inserido Não é válido");
+				onClickIncluirNovoCliente();
+			}
 			break;
 		}
 		case "Pesquisar": {
