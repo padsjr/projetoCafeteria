@@ -1,10 +1,12 @@
 package cafeteria.vendas.relatorios;
 
 import java.sql.*;
+
+import cafeteria.DbConn;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
-import cafeteria.DbConn;
 
 public class RelatorioClientes implements RelatorioExportavelEmArquivoTexto {
 
@@ -17,8 +19,11 @@ public class RelatorioClientes implements RelatorioExportavelEmArquivoTexto {
     public void exportar(File destino) {
         // SQL para obter todos os clientes
         String sql = "SELECT id, nome, telefone FROM cliente ORDER BY nome";
-        try (Connection conn = DbConn.getConnection();
-             Statement stmt = conn.createStatement();
+
+        // Obtém a conexão gerenciada pelo DbConn
+        Connection conn = DbConn.getConnection();
+
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql);
              FileWriter writer = new FileWriter(destino)) {
 
