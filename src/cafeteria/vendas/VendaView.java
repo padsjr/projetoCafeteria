@@ -74,6 +74,11 @@ public class VendaView extends JInternalFrame {
 	private IClienteService clienteService = null;
 	private IProdutoService produtoService = null;
 
+	double precoTabela = 0;
+	int quantidadeTabela = 0;
+	Object valor;
+	String nomeString;
+	Long quantidadeObjeto;
 	private List<ItemVenda> itens;
 
 	/**
@@ -120,9 +125,8 @@ public class VendaView extends JInternalFrame {
 		lbProduto.setBounds(31, 106, 60, 17);
 		getContentPane().add(lbProduto);
 
-		// TODO: Carregar uma lista dos produtos cadastrados
-		List<Produto> produtos = new ArrayList<>();
-		produto = new JComboBox<>(produtos.toArray(new Produto[0]));
+		List<Produto> listaProdutos = vendaService.procurarProduto();
+		produto = new JComboBox<>(listaProdutos.toArray(new Produto[0]));
 		produto.setBounds(109, 104, 600, 21);
 		getContentPane().add(produto);
 		produto.addItemListener(new ItemListener() {
@@ -130,8 +134,11 @@ public class VendaView extends JInternalFrame {
 			public void itemStateChanged(ItemEvent event) {
 				if (event.getStateChange() == ItemEvent.SELECTED) {
 					Produto produtoSelecionado = (Produto) event.getItem();
-					// TODO: Completar o código abaixo para atualizar o valor da medida
-					// medida.setText(produtoSelecionado);
+					String medidaString = vendaService.conversaoMedidaString(produtoSelecionado.getMedida());
+					System.out.println(medidaString);
+					medida.setText(medidaString);
+					precoTabela = produtoSelecionado.getPreco();
+					nomeString = produtoSelecionado.getNome();
 				}
 			}
 		});
@@ -329,7 +336,7 @@ public class VendaView extends JInternalFrame {
 	 * Executa as tarefas para efetuar uma pesquisa com base no ID cliente informado
 	 */
 	protected void onClickBuscarCliente() {
-		
+
 		clienteService = new ClienteService();
 		String idString = this.id.getText();
 		int clienteId = Integer.parseInt(idString);
@@ -349,6 +356,7 @@ public class VendaView extends JInternalFrame {
 			btCancelar.setEnabled(true);
 			btBuscarCliente.setEnabled(false);
 			btAdicionarItem.setEnabled(true);
+			btRemoverItensSelecionados.setEnabled(true);
 			
 		} else {
 			JOptionPane.showMessageDialog(null,"Cliente não encontrado");
@@ -362,7 +370,26 @@ public class VendaView extends JInternalFrame {
 	 * Executa as tarefas para cancelar a venda
 	 */
 	protected void onClickCancelar() {
-		// TODO: Implementar
+
+		id.setEnabled(true);
+		nomeCliente.setEnabled(false);
+		produto.setEnabled(false);
+		quantidade.setEditable(false);
+		desconto.setEditable(false);
+
+		btConfirmar.setEnabled(false);
+		btCancelar.setEnabled(false);
+		btBuscarCliente.setEnabled(true);
+		btAdicionarItem.setEnabled(false);
+
+		id.setText("");
+		nomeCliente.setText("");
+		desconto.setValue(null);
+		medida.setText("");
+		produto.setEditable(false);
+		totalVenda.setText("");
+
+
 		System.out.println("==> onClickCancelar");
 	}
 
@@ -377,14 +404,28 @@ public class VendaView extends JInternalFrame {
 	/**
 	 * Executa as tarefas para registrar uma venda
 	 */
+
 	protected void onClickAdicionarItemVenda() {
 		// TODO: Criar de fato uma venda
 		ItemVenda venda = new ItemVenda();
 		this.itens.add(venda);
-
+		
 		// TODO: Substituir as duas próximas linhas pela inclusão de fato da venda
+		valor = quantidade.getValue();
+		System.out.println(valor);
+		System.out.println(quantidadeObjeto);
+		System.out.println(quantidadeTabela);
+		quantidadeObjeto = (Long) valor;
+		System.out.println(valor);
+		System.out.println(quantidadeObjeto);
+		System.out.println(quantidadeTabela);
+		quantidadeTabela = quantidadeObjeto.intValue();
+		System.out.println(valor);
+		System.out.println(quantidadeObjeto);
+		System.out.println(quantidadeTabela);
+			
 		int id = this.model.getRowCount() + 1; // ID sequencial
-		this.model.addRow(new Object[] { Boolean.FALSE, "Nome " + id, 1.25, 10, 12.5 }); // Adiciona uma nova linha
+		this.model.addRow(new Object[] { Boolean.FALSE, nomeString, precoTabela, quantidadeTabela, precoTabela * quantidadeTabela}); // Adiciona uma nova linha
 	}
 
 	// Classe para renderizar valores numéricos formatados
