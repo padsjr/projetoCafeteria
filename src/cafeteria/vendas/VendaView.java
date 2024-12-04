@@ -76,10 +76,14 @@ public class VendaView extends JInternalFrame {
 
 	double precoTabela = 0;
 	int quantidadeTabela = 0;
+	double descontoDouble = 0;
+	double totalVendaDouble = 0;
 	Object valor;
 	String nomeString;
-	Long quantidadeObjeto;
+	Long quantidadeLong;
 	private List<ItemVenda> itens;
+	Long descontoLong;
+	Long totalVendasLong;
 
 	/**
 	 * Cria a janela para inclusão de uma venda
@@ -312,6 +316,9 @@ public class VendaView extends JInternalFrame {
 			((DefaultTableModel) model).removeRow(linha);
 			this.itens.remove(linha);
 		}
+
+		totalVendaDouble = 0;
+		totalVenda.setValue(totalVendaDouble);
 	}
 
 	/**
@@ -349,7 +356,7 @@ public class VendaView extends JInternalFrame {
 			nomeCliente.setEnabled(false);
 			produto.setEnabled(true);
 			quantidade.setEditable(true);
-			desconto.setEditable(true);
+			desconto.setEditable(false);
 			
 			// Habilitar os botões de ação
 			btConfirmar.setEnabled(true);
@@ -409,22 +416,21 @@ public class VendaView extends JInternalFrame {
 		// TODO: Criar de fato uma venda
 		ItemVenda venda = new ItemVenda();
 		this.itens.add(venda);
-		
+
+		int id = this.model.getRowCount() + 1; // ID sequencial
 		// TODO: Substituir as duas próximas linhas pela inclusão de fato da venda
 		valor = quantidade.getValue();
-		System.out.println(valor);
-		System.out.println(quantidadeObjeto);
-		System.out.println(quantidadeTabela);
-		quantidadeObjeto = (Long) valor;
-		System.out.println(valor);
-		System.out.println(quantidadeObjeto);
-		System.out.println(quantidadeTabela);
-		quantidadeTabela = quantidadeObjeto.intValue();
-		System.out.println(valor);
-		System.out.println(quantidadeObjeto);
-		System.out.println(quantidadeTabela);
-			
-		int id = this.model.getRowCount() + 1; // ID sequencial
+		quantidadeLong = (Long) valor;
+		quantidadeTabela = quantidadeLong.intValue();
+
+		descontoDouble = id * 0.05;
+		desconto.setValue(descontoDouble);
+
+		
+		totalVendaDouble = (precoTabela * quantidadeTabela) + totalVendaDouble - descontoDouble;
+		totalVenda.setValue(totalVendaDouble);
+
+		
 		this.model.addRow(new Object[] { Boolean.FALSE, nomeString, precoTabela, quantidadeTabela, precoTabela * quantidadeTabela}); // Adiciona uma nova linha
 	}
 
