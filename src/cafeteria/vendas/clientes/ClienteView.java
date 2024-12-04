@@ -243,7 +243,7 @@ protected void onClickSalvar() {
 			try {
 				idInt = Integer.parseInt(this.id.getText());
 			} catch (Exception e) { JOptionPane.showMessageDialog( null, "ID inválido" ); 
-			return;
+				return;
 			}		
 			
 			String telefoneText = this.telefone.getText();
@@ -251,17 +251,24 @@ protected void onClickSalvar() {
 			String nomeText = this.nome.getText();
 			Cliente cliente;
 			System.out.println(telefoneText);
-			if (unmaskedTelefone.length() > tamanhoMinimo && unmaskedTelefone.length() <= tamanhoMaximo){
-				cliente = new Cliente(idInt, nomeText, telefoneText);
-				clienteService.adicionarCliente(cliente);
-				JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
-				id.setText("");
-				nome.setText("");
-				telefone.setText("");
-				onClickVoltar();
+			int nomeLenght = 1;
+			if(nomeText.length() >= nomeLenght){
+
+				if (unmaskedTelefone.length() > tamanhoMinimo && unmaskedTelefone.length() <= tamanhoMaximo){
+					cliente = new Cliente(idInt, nomeText, telefoneText);
+					clienteService.adicionarCliente(cliente);
+					JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
+					id.setText("");
+					nome.setText("");
+					telefone.setText("");
+					onClickVoltar();
+				}else{
+					JOptionPane.showMessageDialog(null, "Telefone Inserido Não é válido");
+					onClickIncluirNovoCliente();
+				}
 			}else{
-				JOptionPane.showMessageDialog(null, "Telefone Inserido Não é válido");
-				onClickIncluirNovoCliente();
+				JOptionPane.showMessageDialog(null, "Nome não pode estar em branco.");
+				return;
 			}
 			break;
 		}
@@ -277,7 +284,7 @@ protected void onClickSalvar() {
 		// Perguntar ao usuário se deseja atualizar o cliente existente
 		int resposta = JOptionPane.showConfirmDialog(null, "Cliente já existe. Deseja atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
 		if (resposta == JOptionPane.YES_OPTION) {
-			
+			if(nomeText != null){
 			unmaskedTelefone = telefoneText.replaceAll("[^0-9]", "");
 			if(unmaskedTelefone.length() > tamanhoMinimo && unmaskedTelefone.length() <= tamanhoMaximo){
 				clienteExistente.setId(idInt);
@@ -290,11 +297,14 @@ protected void onClickSalvar() {
 				JOptionPane.showMessageDialog(null, "Telefone Inserido Não é válido");
 				onClickIncluirNovoCliente();
 			}
-			
+		}else{
+			JOptionPane.showMessageDialog(null, "Nome não pode estar em branco.");
+			onClickIncluirNovoCliente();
 		}
-	 	else {
+		}else {
 			onClickVoltar();
 		}
+		
 	
 			// Limpar os campos de entrada
 			this.id.setText("");

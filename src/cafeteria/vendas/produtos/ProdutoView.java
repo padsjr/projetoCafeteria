@@ -300,11 +300,18 @@ public class ProdutoView extends JInternalFrame {
 				}
 				nomeString = nome.getText();
 				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
+				int nomelenght = 1;
+				System.out.println("nome é: " + nomeString);
+				if(nomeString.length() >= nomelenght){
+					EstoqueProduto novoProduto = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
+					produtoService.adicionarProduto(novoProduto);
 
-				EstoqueProduto novoProduto = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
-				produtoService.adicionarProduto(novoProduto);
-
-				JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
+					JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
+				}else{
+					JOptionPane.showMessageDialog(null, "Nome não pode estar em branco.");
+					return;
+				}
+				
 
 				id.setText("");
 				nome.setText("");
@@ -349,22 +356,27 @@ public class ProdutoView extends JInternalFrame {
 				unidadeMedida = (UnidadeMedida) medida.getSelectedItem();
 				
 				EstoqueProduto produtoAtualizado = new EstoqueProduto(nomeString, unidadeMedida, precoDouble, estoqueInt, idInt);
-
-				int resposta = JOptionPane.showConfirmDialog(null, "Cliente Já Existente. Deseja Atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
-				if(resposta == JOptionPane.YES_OPTION){
+				if (nomeString != null){
+					int resposta = JOptionPane.showConfirmDialog(null, "Cliente Já Existente. Deseja Atualizar?", "Atualizar Cliente", JOptionPane.YES_NO_OPTION);
+					if(resposta == JOptionPane.YES_OPTION){
 	
-					produtoAtualizado.setNome(nomeString);
-					produtoAtualizado.setMedida(unidadeMedida);
-					produtoAtualizado.setPreco(precoDouble);
-					produtoAtualizado.setEstoque(estoqueInt);
-					produtoAtualizado.setId(idInt);
+						produtoAtualizado.setNome(nomeString);
+						produtoAtualizado.setMedida(unidadeMedida);
+						produtoAtualizado.setPreco(precoDouble);
+						produtoAtualizado.setEstoque(estoqueInt);
+						produtoAtualizado.setId(idInt);
 
-					produtoService.editarProduto(produtoAtualizado);
+						produtoService.editarProduto(produtoAtualizado);
 
-					JOptionPane.showMessageDialog(null, "Cliente Atualizado Com Sucesso!");
+						JOptionPane.showMessageDialog(null, "Cliente Atualizado Com Sucesso!");
+					}else{
+						onClickVoltar();
+					}
 				}else{
-					onClickVoltar();
+					JOptionPane.showMessageDialog(null, "Nome não pode estar em branco.");
+					return;
 				}
+				
 				
 				onClickVoltar();
 				break;
