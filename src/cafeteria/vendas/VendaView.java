@@ -84,6 +84,7 @@ public class VendaView extends JInternalFrame {
 	private List<ItemVenda> itens;
 	Long descontoLong;
 	Long totalVendasLong;
+	int idRow;
 
 	/**
 	 * Cria a janela para inclusão de uma venda
@@ -305,9 +306,12 @@ public class VendaView extends JInternalFrame {
 	protected void onClickRemoverItensSelecionados() {
 		List<Integer> linhasSelecionadas = new ArrayList<>();
 		TableModel model = table.getModel();
+		double totalRemovido = 0.0;
 		for (int linha = 0, qtdLinhas = model.getRowCount(); linha < qtdLinhas; linha++) {
 			if ((Boolean) model.getValueAt(linha, COLUNA_SELECAO)) {
 				linhasSelecionadas.add(linha);
+
+				totalRemovido += (Double) model.getValueAt(linha, COLUNA_VALOR_TOTAL);
 			}
 		}
 
@@ -317,8 +321,9 @@ public class VendaView extends JInternalFrame {
 			this.itens.remove(linha);
 		}
 
-		totalVendaDouble = 0;
+		totalVendaDouble -= totalRemovido;
 		totalVenda.setValue(totalVendaDouble);
+		
 	}
 
 	/**
@@ -382,7 +387,7 @@ public class VendaView extends JInternalFrame {
 		nomeCliente.setEnabled(false);
 		produto.setEnabled(false);
 		quantidade.setEditable(false);
-		desconto.setEditable(false);
+		desconto.setEditable(true);
 
 		btConfirmar.setEnabled(false);
 		btCancelar.setEnabled(false);
@@ -391,10 +396,11 @@ public class VendaView extends JInternalFrame {
 
 		id.setText("");
 		nomeCliente.setText("");
-		desconto.setValue(null);
+		desconto.setValue(0);
 		medida.setText("");
 		produto.setEditable(false);
 		totalVenda.setText("");
+		model.setValueAt(null, 0, COLUNA_NOME);
 
 
 		System.out.println("==> onClickCancelar");
@@ -416,21 +422,21 @@ public class VendaView extends JInternalFrame {
 		// TODO: Criar de fato uma venda
 		ItemVenda venda = new ItemVenda();
 		this.itens.add(venda);
-
-		int id = this.model.getRowCount() + 1; // ID sequencial
+		desconto.setValue(0);
+		idRow = this.model.getRowCount() + 1; // ID sequencial
 		// TODO: Substituir as duas próximas linhas pela inclusão de fato da venda
 		valor = quantidade.getValue();
 		quantidadeLong = (Long) valor;
 		quantidadeTabela = quantidadeLong.intValue();
 
-		descontoDouble = id * 0.05;
+		descontoDouble = (Integer) desconto.getValue();
 		desconto.setValue(descontoDouble);
 
-		
 		totalVendaDouble = (precoTabela * quantidadeTabela) + totalVendaDouble - descontoDouble;
 		totalVenda.setValue(totalVendaDouble);
 
-		
+		System.out.println(idRow);
+
 		this.model.addRow(new Object[] { Boolean.FALSE, nomeString, precoTabela, quantidadeTabela, precoTabela * quantidadeTabela}); // Adiciona uma nova linha
 	}
 
