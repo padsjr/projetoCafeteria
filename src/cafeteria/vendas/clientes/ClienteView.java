@@ -157,7 +157,14 @@ public class ClienteView extends JInternalFrame {
 		String idString = this.id.getText();
 		
 		// 2) chamar o this.service.buscarCliente(id)
-		int clienteId = Integer.parseInt(idString);
+		int clienteId;
+		try{
+			clienteId = Integer.parseInt(idString);
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null, "ID inválido. Por favor, insira um número.");
+			return;
+		}
+		
 		Cliente cliente = clienteService.buscarCliente(clienteId);
 		
 		// 3) ler o retorno do this.service

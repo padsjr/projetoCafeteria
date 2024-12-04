@@ -400,7 +400,7 @@ public class VendaView extends JInternalFrame {
 		medida.setText("");
 		produto.setEditable(false);
 		totalVenda.setText("");
-		model.setValueAt(null, 0, COLUNA_NOME);
+		
 
 
 		System.out.println("==> onClickCancelar");
